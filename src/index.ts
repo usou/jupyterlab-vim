@@ -80,6 +80,7 @@ class VimCell {
             lvim.defineEx('quit', 'q', function(cm: any) {
                 commands.execute('notebook:enter-command-mode');
             });
+            lvim.map('jj', '<Esc>', 'insert')(CodeMirror).Vim.handleKey(editor.editor, '<Esc>');
 
             (CodeMirror as any).Vim.handleKey(editor.editor, '<Esc>');
             lvim.defineMotion('moveByLinesOrCell', (cm: any, head: any, motionArgs: any, vim: any) => {
@@ -597,6 +598,17 @@ function activateCellVim(app: JupyterFrontEnd, tracker: INotebookTracker): Promi
             command: 'tooltip:launch-notebook'
         });
 
+        commands.addKeyBinding({
+            selector: '.jp-Notebook.jp-mod-editMode',
+            keys: ['Ctrl ['],
+            command: 'leave-insert-mode'
+        });
+        // added, but this didn't work.
+        commands.addKeyBinding({
+            selector: '.jp-Notebook.jp-mod-editMode',
+            keys: ['Ctrl ]'],
+            command: 'notebook:enter-command-mode'
+        });
         // tslint:disable:no-unused-expression
         new VimCell(app, tracker);
     });
